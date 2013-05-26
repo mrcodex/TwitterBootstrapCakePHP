@@ -33,7 +33,7 @@
  * @version    1.0
  * @link       http://www.omarcelo.com.br
  */
-App::uses('TwitterBootstrapCakePHP.CakeBootstrapStarter', 'View/Helper');
+//App::uses('TwitterBootstrapCakePHP.CakeBootstrapStarter', 'View/Helper');
 App::uses('CakeBootstrapStarterHelper', 'TwitterBootstrapCakePHP.View/Helper');
 App::uses('Controller', 'Controller');
 App::uses('Model', 'Model');
@@ -105,7 +105,7 @@ class CakeBootstrapStarterTest extends CakeTestCase
             )
         );
 
-        $this->assertEquals('<script type="text/javascript" src="/js/twitter/bootstrap.js"></script>', $js);
+        $this->assertEquals('<script type="text/javascript" src="/js/bootstrap.js"></script>', $js);
     }
 
     /**
@@ -117,7 +117,7 @@ class CakeBootstrapStarterTest extends CakeTestCase
     public function testScriptMinifiedFile()
     {
         $js = $this->CakeBootstrapStarter->script();
-        $this->assertEquals('<script type="text/javascript" src="/js/twitter/bootstrap.min.js"></script>', $js);
+        $this->assertEquals('<script type="text/javascript" src="/js/bootstrap.min.js"></script>', $js);
     }
 
     /**
@@ -152,7 +152,7 @@ class CakeBootstrapStarterTest extends CakeTestCase
 
         $css = str_replace(array("\n", "\t"), '', $css);
 
-        $this->assertTextEquals('<link rel="stylesheet" type="text/css" href="/css/twitter/bootstrap.css" />', $css);
+        $this->assertTextEquals('<link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />', $css);
     }
 
     /**
@@ -171,8 +171,8 @@ class CakeBootstrapStarterTest extends CakeTestCase
             )
         );
         $css = str_replace(array("\n", "\t"), '', $css);
-        $expected = '<link rel="stylesheet" type="text/css" href="/css/twitter/bootstrap.min.css" />';
-        $expected .= '<link rel="stylesheet" type="text/css" href="/css/twitter/bootstrap-responsive.min.css" />';
+        $expected = '<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />';
+        $expected .= '<link rel="stylesheet" type="text/css" href="/css/bootstrap-responsive.min.css" />';
         $this->assertEquals($expected, $css);
     }
 

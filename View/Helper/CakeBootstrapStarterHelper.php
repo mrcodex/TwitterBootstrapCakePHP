@@ -41,10 +41,6 @@ App::uses('AppHelper', 'View/Helper');
  */
 class CakeBootstrapStarterHelper extends AppHelper
 {
-    protected $cssPath = 'twitter/';
-
-    protected $scriptPath = 'twitter/';
-
     public $helpers = array('Html');
 
 
@@ -87,7 +83,7 @@ class CakeBootstrapStarterHelper extends AppHelper
         }
         unset($options['min']);
 
-        return $this->Html->script($this->scriptPath . $file, $options);
+        return $this->Html->script($file, $options);
     }
 
     /**
@@ -105,7 +101,7 @@ class CakeBootstrapStarterHelper extends AppHelper
     public function css(array $options = array())
     {
         $options = $options + array('inline' => true, 'min' => true, 'responsive' => false);
-        $file = $this->scriptPath . 'bootstrap';
+        $file = 'bootstrap';
         $suffix = '';
         if ( $options['min'] ) {
             $suffix .= '.min';
