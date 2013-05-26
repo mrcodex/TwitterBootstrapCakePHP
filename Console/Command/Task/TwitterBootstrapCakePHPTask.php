@@ -1,11 +1,11 @@
 <?php
 /**
- * TwitterBootstrapCakePHPShell file
+ * TwitterBootstrapCakePHPTask file
  *
  * MIT License
  * ===========
  *
- * Copyright (c) 2012 Marcelo Rocha <[Your email]>
+ * Copyright (c) 2012 Marcelo Rocha <contato@omarcelo.com.br>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -26,7 +26,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @package    TwitterBootstrapCakePHP.Console.Command
+ * @package    TwitterBootstrapCakePHP.Console.Command.Task
  * @author     Marcelo Rocha <contato@omarcelo.com.br>
  * @copyright  2012 Marcelo Rocha.
  * @license    http://www.opensource.org/licenses/mit-license.php  MIT License
@@ -34,11 +34,11 @@
  * @link       http://www.omarcelo.com.br
  */
 /**
- * TwitterBootstrapCakePHPShell class
+ * TwitterBootstrapCakePHPTask class
  *
- * @package TwitterBootstrapCakePHP.Console.Command
+ * @package TwitterBootstrapCakePHP.Console.Command.Task
  */
-class TwitterBootstrapCakePHPShell extends AppShell
+class TwitterBootstrapCakePHPTask extends Shell
 {
 	/**
 	 * Copies a file at given path, based on Shell::createFile

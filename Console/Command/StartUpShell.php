@@ -1,6 +1,6 @@
 <?php
 /**
- * ImportWebFilesShell file
+ * StartUpShell file
  *
  * MIT License
  * ===========
@@ -34,13 +34,16 @@
  * @link       http://www.omarcelo.com.br
  */
 /**
- * ImportWebFilesShell class
+ * StartUpShell class
  *
  * @package TwitterBootstrapCakePHP.Console.Command
  */
-class ImportWebFilesShell extends AppShell
+class StartUpShell extends AppShell
 {
-	public $tasks = array('TwitterBootstrapCakePHP.ImportWebFiles');
+	public $tasks = array(
+		'TwitterBootstrapCakePHP.ImportWebFiles',
+		'TwitterBootstrapCakePHP.ImportLayout'
+	);
 
 	/**
 	 * Override main() to handle action
@@ -51,5 +54,6 @@ class ImportWebFilesShell extends AppShell
     public function main()
     {
     	$this->ImportWebFiles->execute();
+    	$this->ImportLayout->execute();
     }
 }

@@ -33,7 +33,7 @@
  * @version    1.0
  * @link       http://www.omarcelo.com.br
  */
-//App::uses('TwitterBootstrapCakePHP.CakeBootstrapStarter', 'View/Helper');
+App::uses('TwitterBootstrapCakePHP.CakeBootstrapStarter', 'View/Helper');
 App::uses('CakeBootstrapStarterHelper', 'TwitterBootstrapCakePHP.View/Helper');
 App::uses('Controller', 'Controller');
 App::uses('Model', 'Model');

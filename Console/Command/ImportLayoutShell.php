@@ -33,43 +33,15 @@
  * @version    0.5
  * @link       http://www.omarcelo.com.br
  */
-App::uses('TwitterBootstrapCakePHPShell', 'TwitterBootstrapCakePHP.Console/Command');
 /**
  * ImportLayoutShell class
  *
  * @package TwitterBootstrapCakePHP.Console.Command
  */
-class ImportLayoutShell extends TwitterBootstrapCakePHPShell
+class ImportLayoutShell extends AppShell
 {
-	/**
-	 * The list of layouts
-	 *
-	 * @var string
-	 */
-	private $_layouts;
+	public $tasks = array('TwitterBootstrapCakePHP.ImportLayout');
 
-	private $_pluginLayousPath;
-
-	private $_appLayoutsPath;
-
-	/**
-	 * Override startup of the Shell
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function startup()
-	{
-		parent::startup();
-		$this->_pluginLayousPath = APP::pluginPath('TwitterBootstrapCakePHP') . 'View' . DS . 'Layouts' . DS;
-		$this->_appLayoutsPath = APP . 'View' . DS . 'Layouts' . DS;
-		$this->_layouts = array(
-			'error' => __d('cake_console', 'Error layout'),
-			'fixed' => __d('cake_console', 'Fixed layout'),
-			'fixed_with_menu' => __d('cake_console', 'Fixed layout with top menu'),
-			'fluid' => __d('cake_console', 'Fluid layout'),
-		);
-	}
 	/**
 	 * Override main() to handle action
 	 *
@@ -78,52 +50,6 @@ class ImportLayoutShell extends TwitterBootstrapCakePHPShell
 	 */
     public function main()
     {
-    	$importMore = 'y';
-    	do {
-	    	$this->out(__d('cake_console', 'Import Layouts'));
-			$this->hr();
-			$ind = 0;
-			$files = array();
-			foreach ( $this->_layouts as $fileName => $text ) {
-				$ind++;
-				$files[$ind] = $fileName;
-				$this->out(sprintf('[%d] %s', $ind, $text));
-			}
-			$this->out(__d('cake_console', '[Q]uit'));
-
-			$option = strtoupper($this->in(__d('cake_console', 'Please choose a layout type:')));
-			if ( is_numeric($option) && isset($files[(int)$option]) ) {
-				$this->import($files[(int)$option]);
-				$importMore = $this->in(__d('cake_console', 'Would you like to import another layout file?'), array('y', 'n'), 'n');
-			} elseif ( $option == 'Q' ) {
-				exit(0);
-			} else {
-				$this->out(__d('cake_console', 'You have made an invalid selection. Please choose an valid option by entering the number.'));
-			}
-		} while( $importMore === 'y');
-
-		$this->hr();
-    }
-
-	/**
-     * Import an layout file to the app
-     *
-     * @param string $layout Layout file name
-     *
-     * @return boolean
-     */
-    protected function import($layout)
-    {
-    	if ( !is_dir($this->_appLayoutsPath) && !mkdir($this->_appLayoutsPath, 0775, true) ) {
-    		$this->out(__d('cake_console', '<warning>Not able to create the directory `%s`, please check permissions</warning>', $this->_appLayoutsPath));
-    		return false;
-    	}
-    	do {
-    		$fileName = trim($this->in(__d('cake_console', 'Please enter the new layout file name:'), null, $layout));
-    	} while($fileName == '');
-
-    	$fileName .= '.ctp';
-    	$layout .= '.ctp';
-    	return $this->copyFile($this->_pluginLayousPath . $layout, $this->_appLayoutsPath . $fileName);
+    	$this->ImportLayout->execute();
     }
 }
