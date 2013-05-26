@@ -30,7 +30,7 @@
  * @author     Marcelo Rocha <contato@omarcelo.com.br>
  * @copyright  2012 Marcelo Rocha.
  * @license    http://www.opensource.org/licenses/mit-license.php  MIT License
- * @version    0.3
+ * @version    0.8
  * @link       http://www.omarcelo.com.br
  */
 /**
@@ -59,7 +59,7 @@ class ImportWebFilesShell extends AppShell
 	 *
 	 * @var string
 	 */
-	private $_sourceDir;
+	private $_webroot;
 
 	/**
 	 * Override startup of the Shell
@@ -73,7 +73,7 @@ class ImportWebFilesShell extends AppShell
 		$pluginPath = APP::pluginPath('TwitterBootstrapCakePHP');
 		$this->_downloadDir = $pluginPath . 'tmp' . DS . 'twitter' . DS;
 		$this->_downloadUrl = 'http://twitter.github.io/bootstrap/assets/bootstrap.zip';
-		$this->_sourceDir = $pluginPath . 'webroot' . DS;
+		$this->_webroot = $pluginPath . 'webroot' . DS;
 	}
 	/**
 	 * Override main() to handle action
@@ -83,44 +83,36 @@ class ImportWebFilesShell extends AppShell
 	 */
     public function main()
     {
-        $this->import($this->_sourceDir);
-        //
-        //2- show menu
-        //
-        //3- download files and unzip
-        //
-        //4- copy files to webroot dir
-    }
+    	$this->out(__d('cake_console', 'Import Twitter Bootstrap files'));
+		$this->hr();
+		$this->out(__d('cake_console', '[D]ownload'));
+		$this->out(__d('cake_console', '[L]ocal files'));
+		$this->out(__d('cake_console', '[Q]uit'));
 
-    /**
-     * Import the "twitter bootstrap" files to the app
-     *
-     * @param string $source Directory source where have the "twitter bootstrap" files
-     *
-     * @return null
-     */
-    public function import($source)
-    {
-    	$dest = WEBROOT_DIR;
-    	$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator(
-				$source,
-				RecursiveDirectoryIterator::SKIP_DOTS
-			),
-		  	RecursiveIteratorIterator::SELF_FIRST
-		);
+		$classToBake = strtoupper($this->in(__d('cake_console', 'How do you want to import?'), array('D', 'L', 'Q')));
 
-		foreach ( $iterator as $item ) {
-		  if ($item->isDir()) {
-		  	$newDir = $dest . DS . $iterator->getSubPathName();
-		  	if ( !is_dir($newDir) && !mkdir($newDir, 0775, true) ) {
-		    	$this->out(__d('cake_console', '<warning>Not able to create the directory `%s`, please check permissions</warning>', $newDir));
-		    }
-		  } else {
-		    $this->copyFile($item, $dest . DS . $iterator->getSubPathName());
-		  }
+		switch ($classToBake) {
+			case 'D':
+				if ( !$this->clearDir($this->_downloadDir) ) {
+					$this->out(__d('cake_console', '<error>Not able to clear tmp files, please try again</error>.'), 2);
+					return false;
+				} elseif ( $this->download() ) {
+					$this->import($this->_downloadDir . DS . 'bootstrap');
+				} else {
+					$this->out(__d('cake_console', '<error>Not able to download files, please try again</error>.'), 2);
+				}
+				$this->clearDir($this->_downloadDir);
+				break;
+			case 'L':
+				$this->import($this->_webroot);
+				break;
+			case 'Q':
+				exit(0);
+				break;
+			default:
+				$this->out(__d('cake_console', 'You have made an invalid selection. Please choose an option by entering D or L.'));
 		}
-		return true;
+		$this->hr();
     }
 
     /**
@@ -160,4 +152,93 @@ class ImportWebFilesShell extends AppShell
 		$this->err(__d('cake_console', '<error>Could not write to `%s`</error>.', $dest), 2);
 		return false;
 	}
+
+	/**
+	 * Clear a directory
+	 *
+	 * @param string $path The directory path
+	 *
+	 * @return booolean
+	 */
+	protected function clearDir($path)
+	{
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator(
+				$path,
+				RecursiveDirectoryIterator::SKIP_DOTS
+			),
+		  	RecursiveIteratorIterator::CHILD_FIRST
+		);
+
+		foreach ( $iterator as $item ) {
+			if ($item->isDir()) {
+			  	if ( !rmdir($item->getRealPath())) {
+			    	$this->out(__d('cake_console', '<warning>Not able to remove the directory `%s`, please check permissions</warning>', $item));
+			    	return false;
+			    }
+		  	} elseif ( !unlink($item->getRealPath()) ) {
+			     $this->out(__d('cake_console', '<warning>Not able to remove the file `%s`, please check permissions</warning>', $item));
+			     return false;
+		  	}
+		}
+		return true;
+	}
+
+	/**
+	 * Download the "twitter bootstrap" files
+	 *
+	 * @access protected
+	 * @return boolean
+	 */
+	protected function download()
+	{
+		$file = $this->_downloadDir . 'bootstrap.zip';
+		if ( !copy($this->_downloadUrl, $file) ) {
+			return false;
+		}
+		// Extract the downloaded file
+		$zip = new ZipArchive();
+
+		if ( $zip->open($file) === true) {
+
+		    $zip->extractTo($this->_downloadDir);
+		    // Fechando o arquivo
+		    $zip->close();
+
+		} else {
+		    return false;
+		}
+		return is_dir($this->_downloadDir . 'bootstrap');
+	}
+
+	/**
+     * Import the "twitter bootstrap" files to the app
+     *
+     * @param string $source Directory source where have the "twitter bootstrap" files
+     *
+     * @return null
+     */
+    protected function import($source)
+    {
+    	$dest = WWW_ROOT;
+    	$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator(
+				$source,
+				RecursiveDirectoryIterator::SKIP_DOTS
+			),
+		  	RecursiveIteratorIterator::SELF_FIRST
+		);
+
+		foreach ( $iterator as $item ) {
+		  if ($item->isDir()) {
+		  	$newDir = $dest . DS . $iterator->getSubPathName();
+		  	if ( !is_dir($newDir) && !mkdir($newDir, 0775, true) ) {
+		    	$this->out(__d('cake_console', '<warning>Not able to create the directory `%s`, please check permissions</warning>', $newDir));
+		    }
+		  } else {
+		    $this->copyFile($item, $dest . DS . $iterator->getSubPathName());
+		  }
+		}
+		return true;
+    }
 }
