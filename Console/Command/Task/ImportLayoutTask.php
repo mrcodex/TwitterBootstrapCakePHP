@@ -127,4 +127,18 @@ class ImportLayoutTask extends TwitterBootstrapCakePHPTask
     	$layout .= '.ctp';
     	return $this->copyFile($this->_pluginLayousPath . $layout, $this->_appLayoutsPath . $fileName);
     }
+
+    /**
+	 * get the option parser for the plugin task
+	 *
+	 * @return void
+	 */
+	public function getOptionParser()
+	{
+		$parser = parent::getOptionParser();
+		return $parser->description(__d('cake_console',
+			'Import layouts files to the application, ' .
+			'You can chosse a list of layouts types.'
+		));
+	}
 }

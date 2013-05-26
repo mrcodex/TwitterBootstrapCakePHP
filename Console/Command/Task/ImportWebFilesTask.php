@@ -174,4 +174,17 @@ class ImportWebFilesTask extends TwitterBootstrapCakePHPTask
 		}
 		return true;
     }
+    /**
+	 * get the option parser for the plugin task
+	 *
+	 * @return void
+	 */
+	public function getOptionParser()
+	{
+		$parser = parent::getOptionParser();
+		return $parser->description(__d('cake_console',
+			'Import the "Twitter Bootstrap" files to the application, ' .
+			'You can download or use the local files.'
+		));
+	}
 }
